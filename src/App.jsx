@@ -1,37 +1,13 @@
 import { useState } from "react";
 import { Tweet } from "./Tweet";
-
-const DEFAULT_TWEET = [
-  {
-    name: "Mamadou",
-    content: "Je vais Bien",
-    like: 1000,
-    id: 0,
-  },
-  {
-    name: "Jean",
-    content: "Cool",
-    like: 24,
-    id: 1,
-  },
-  {
-    name: "Moussa",
-    content: "Nice",
-    like: 11,
-    id: 2,
-  },
-  {
-    name: "Paul",
-    content: "Fun",
-    like: 20,
-    id: 3,
-  },
-];
+import { DEFAULT_TWEET } from "./Components/Tableau";
+import { Formulaire } from "./Components/Formulaire";
 
 function App() {
   let [tweets, setTweets] = useState(DEFAULT_TWEET);
 
   const handleSubmit = (e) => {
+
     e.preventDefault();
     const name = e.target.name.value;
     const content = e.target.content.value;
@@ -42,27 +18,28 @@ function App() {
       like: 0,
     };
     addTweet(newTweet);
+    e.target.name.value = "";
+    e.target.content.value = "";
   };
 
   const addTweet = (tweet) => {
     setTweets([...tweets, tweet]);
-  }
+  };
 
   const tweetsList = tweets.map((tweet) => {
-  
     const onDelete = (tweetId) => {
       setTweets((curr) => curr.filter((tweet) => tweet.id !== tweetId));
     };
 
     const onLike = (tweetId) => {
-      setTweets(curr => {
+      setTweets((curr) => {
         const copyTweet = [...curr];
-        const likedTweet = copyTweet.find(tweet => tweet.id === tweetId);
+        const likedTweet = copyTweet.find((tweet) => tweet.id === tweetId);
         likedTweet.like += 1;
 
-        return copyTweet
-      })
-    }
+        return copyTweet;
+      });
+    };
 
     return (
       <Tweet
@@ -71,24 +48,15 @@ function App() {
         content={tweet.content}
         like={tweet.like}
         id={tweet.id}
-        onDelete={(id) => {
-          onDelete(id);
-        }}
-        onLike={(id) => {
-          onLike(id)
-        }}
+        onDelete={(id) => onDelete(id)}
+        onLike={(id) => onLike(id)}
       />
     );
   });
 
   return (
     <div>
-      <form className="tweet-form" onSubmit={handleSubmit}>
-        <h4>New tweet</h4>
-        <input type="text" name="name" placeholder="name" />
-        <input type="text" name="content" placeholder="content" />
-        <input type="submit" />
-      </form>
+      <Formulaire onSubmit={handleSubmit} />
       <div className="tweet-container"> {tweetsList}</div>
     </div>
   );
